@@ -1,5 +1,6 @@
 package com.pluralsight.userinterface;
 
+import com.pluralsight.model.Category;
 import com.pluralsight.model.Customer;
 import com.pluralsight.model.Product;
 
@@ -16,7 +17,6 @@ public class UserInterface {
 
     //HOME SCREEN
     public void homeScreen() {
-        
 
         while (true) {
             String homeScreen = """
@@ -24,6 +24,7 @@ public class UserInterface {
                     What do you want to do?\n 
                     1) Display all products\n
                     2) Display all customers\n
+                    3) Display all categories\n
                     0) Exit 
                     """;
 
@@ -38,6 +39,9 @@ public class UserInterface {
                 case 2:
                     displayAllCustomers();
                     break;
+                case 3:
+                    displayAllCategories();
+                    break;
                 case 0:
                     System.exit(0);
                 default:
@@ -46,6 +50,7 @@ public class UserInterface {
             }
         }
     }
+
 
 
 
@@ -67,7 +72,6 @@ public class UserInterface {
     }
 
     private void displayAllProducts() {
-
         try{
             List<Product> myProducts = getProducts();
             for(Product p : myProducts){
@@ -81,6 +85,51 @@ public class UserInterface {
         }
     }
 
+    private void displayAllCategories() {
+        try{
+            List<Category> myCategories = getCategory();
+            for(Category c : myCategories){
+                System.out.println(c.toString());
+            }
+
+        }catch(Exception e)
+        {
+            System.out.println("There was an error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private List<Category> getCategory() throws ClassNotFoundException, SQLException {
+        ArrayList<Category>categories = new ArrayList<>();
+
+        //Load the MySQL Driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        String productsQuery = "SELECT categoryID,CategoryName,Description FROM categories ORDER BY CategoryID;";
+
+
+        // create the connection and prepared statement in a
+        // try-with-resources block
+        try(Connection connection = DriverManager.getConnection(URL, username, password);
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(productsQuery);
+        )
+        {
+            //process the results
+            while (result.next()){
+
+                int categoryID = result.getInt("CategoryID");
+                String categoryName = result.getString("CategoryName");
+                String description = result.getString("Description");
+
+                //making the product
+                Category category = new Category(categoryID,categoryName,description);
+                categories.add(category);
+
+            }
+            return categories;
+        }
+    }
 
     private ArrayList<Product> getProducts() throws ClassNotFoundException, SQLException {
 
@@ -91,6 +140,9 @@ public class UserInterface {
 
         String productsQuery = "SELECT ProductID,ProductName,UnitPrice,UnitsInStock FROM products;";
 
+
+        // create the connection and prepared statement in a
+        // try-with-resources block
         try(Connection connection = DriverManager.getConnection(URL, username, password);
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(productsQuery);
@@ -121,6 +173,9 @@ public class UserInterface {
 
         String customerQuery = "SELECT ContactName, CompanyName, City, Country, Phone FROM customers;";
 
+
+        // create the connection and prepared statement in a
+        // try-with-resources block
         try(Connection connection = DriverManager.getConnection(URL,username,password);
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(customerQuery);
@@ -139,5 +194,7 @@ public class UserInterface {
             return customers;
         }
     }
+
+
 
 }
