@@ -38,9 +38,13 @@ public class Main {
             String productName = result.getString("ProductName");
             String productID = result.getString("ProductID");
             String unitPrice = result.getString("UnitPrice");
-            System.out.printf("%-5s %-40s %-10s \n" ,productID ,productName ,unitPrice);
+            String stock = result.getString("UnitsInStock");
+            System.out.println("--------------------------------------------------");
+            System.out.printf(" ID: %-5s \n Name: %-40s \n Price: %-5s \n Stock:%-15s \n" ,productID ,productName ,unitPrice ,stock);
         }
 
+        result.close();
+        statement.close();
         connection.close();
 
 
