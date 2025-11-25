@@ -1,12 +1,11 @@
 package com.pluralsight.userinterface;
 
-import com.pluralsight.model.Employee;
+import com.pluralsight.model.Customer;
 import com.pluralsight.model.Product;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class UserInterface {
 
@@ -54,8 +53,8 @@ public class UserInterface {
     private void displayAllCustomers() {
 
         try{
-            List<Employee> myEmployees = getEmployee();
-            for(Employee e : myEmployees){
+            List<Customer> myCustomer = getCustomer();
+            for(Customer e : myCustomer){
                 System.out.println(e.toString());
             }
 
@@ -66,8 +65,6 @@ public class UserInterface {
         }
 
     }
-
-
 
     private void displayAllProducts() {
 
@@ -106,6 +103,8 @@ public class UserInterface {
                 int productID = result.getInt("ProductID");
                 double unitPrice = result.getDouble("UnitPrice");
                 int stock = result.getInt("UnitsInStock");
+
+                //making the product
                 Product product = new Product(productID,productName,unitPrice,stock);
                 products.add(product);
 
@@ -114,14 +113,31 @@ public class UserInterface {
         }
     }
 
-    private List<Employee> getEmployee() throws ClassNotFoundException {
+    private List<Customer> getCustomer() throws ClassNotFoundException, SQLException {
 
-        ArrayList<Employee> Employees = new ArrayList<>();
+        ArrayList<Customer> customers = new ArrayList<>();
 
         Class.forName("com.mysql.cj.jdbc.Driver");
-        
-        String employeeQuery = "SELECT ProductID,ProductName,UnitPrice,UnitsInStock FROM products;";
 
+        String customerQuery = "SELECT ContactName, CompanyName, City, Country, Phone FROM customers;";
+
+        try(Connection connection = DriverManager.getConnection(URL,username,password);
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(customerQuery);
+            )
+        {
+            while(result.next()){
+                String contactName = result.getString("ContactName");
+                String companyName = result.getString("CompanyName");
+                String city = result.getString("City");
+                String country = result.getString("Country");
+                String phoneNum = result.getString("Phone");
+                Customer customer = new Customer(contactName,companyName,city,country,phoneNum);
+
+                customers.add(customer);
+            }
+            return customers;
+        }
     }
 
 }

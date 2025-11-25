@@ -1,6 +1,6 @@
 package com.pluralsight.model;
 
-public class Employee {
+public class Customer {
 
     private String contactName;
     private String companyName;
@@ -8,7 +8,7 @@ public class Employee {
     private String country;
     private String phoneNumber;
 
-    public Employee(String contactName, String companyName, String city, String country, String phoneNumber) {
+    public Customer(String contactName, String companyName, String city, String country, String phoneNumber) {
         this.contactName = contactName;
         this.companyName = companyName;
         this.city = city;
