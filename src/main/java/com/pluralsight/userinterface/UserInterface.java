@@ -85,7 +85,7 @@ public class UserInterface {
         }
     }
 
-    private void displayAllCategories() {
+    private void displayAllCategories()  {
         try{
             List<Category> myCategories = getCategory();
             for(Category c : myCategories){
@@ -97,8 +97,29 @@ public class UserInterface {
             System.out.println("There was an error: " + e.getMessage());
             e.printStackTrace();
         }
+
+
+        try {
+            System.out.println("Select a category to display products from");
+            String categoryID = InputCollector.promptForString("Select ID ");
+            List<Product> myProductsByID = getProductsByID(categoryID);
+
+            System.out.println("Displaying All Products with CategoryID: "+ categoryID);
+            System.out.println("-----------------------------------------------------");
+
+            for(Product p : myProductsByID){
+                System.out.println(p.toString());
+            }
+
+        } catch (Exception e) {
+            System.out.println("There was an error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
+
+
+    //GET METHODS
     private List<Category> getCategory() throws ClassNotFoundException, SQLException {
         ArrayList<Category>categories = new ArrayList<>();
 
@@ -163,6 +184,37 @@ public class UserInterface {
             }
             return products;
         }
+    }
+
+    private ArrayList<Product> getProductsByID(String categoryID) throws ClassNotFoundException, SQLException {
+
+        ArrayList<Product> productByID = new ArrayList<>();
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        // create the connection and prepared statement in a
+        // try-with-resources block
+        try(
+                Connection connection = DriverManager.getConnection(URL, username, password);
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT productID , productName, Unitprice, UnitsInStock FROM products WHERE CategoryID = ?");
+        ) {
+
+            preparedStatement.setString(1,categoryID);
+
+            try(ResultSet result = preparedStatement.executeQuery()){
+                while (result.next()) {
+                    String productName = result.getString("ProductName");
+                    int productID = result.getInt("ProductID");
+                    double unitPrice = result.getDouble("Unitprice");
+                    int stock = result.getInt("UnitsInStock");
+
+                    //making the product
+                    Product product = new Product(productID,productName,unitPrice,stock);
+                    productByID.add(product);
+                }
+
+            }
+        } return productByID;
     }
 
     private List<Customer> getCustomer() throws ClassNotFoundException, SQLException {
