@@ -10,10 +10,10 @@ import java.util.List;
 
 public class UserInterface {
 
-    public static String username = "root";
-    public static String password = "yearup";
-    public static String dataBase = "northwind";
-    public static String URL = "jdbc:mysql://localhost:3306/" + dataBase;
+//    public static String username = "root";
+//    public static String password = "yearup";
+//    public static String dataBase = "northwind";
+//    public static String URL = "jdbc:mysql://localhost:3306/" + dataBase;
 
     //HOME SCREEN
     public void homeScreen() {
@@ -104,8 +104,8 @@ public class UserInterface {
             String categoryID = InputCollector.promptForString("Select ID ");
             List<Product> myProductsByID = getProductsByID(categoryID);
 
-            System.out.println("Displaying All Products with CategoryID: "+ categoryID);
-            System.out.println("-----------------------------------------------------");
+            System.out.println("Displaying All Products with CategoryID: " + categoryID);
+            System.out.println("=====================================================");
 
             for(Product p : myProductsByID){
                 System.out.println(p.toString());
@@ -120,37 +120,7 @@ public class UserInterface {
 
 
     //GET METHODS
-    private List<Category> getCategory() throws ClassNotFoundException, SQLException {
-        ArrayList<Category>categories = new ArrayList<>();
 
-        //Load the MySQL Driver
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
-        String productsQuery = "SELECT categoryID,CategoryName,Description FROM categories ORDER BY CategoryID;";
-
-
-        // create the connection and prepared statement in a
-        // try-with-resources block
-        try(Connection connection = DriverManager.getConnection(URL, username, password);
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(productsQuery);
-        )
-        {
-            //process the results
-            while (result.next()){
-
-                int categoryID = result.getInt("CategoryID");
-                String categoryName = result.getString("CategoryName");
-                String description = result.getString("Description");
-
-                //making the product
-                Category category = new Category(categoryID,categoryName,description);
-                categories.add(category);
-
-            }
-            return categories;
-        }
-    }
 
     private ArrayList<Product> getProducts() throws ClassNotFoundException, SQLException {
 
