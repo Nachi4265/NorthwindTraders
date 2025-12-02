@@ -1,4 +1,5 @@
 package com.pluralsight.userinterface;
+import com.pluralsight.Persistance.DataManager;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 public class Main {
@@ -6,13 +7,20 @@ public class Main {
 
          if(!ensureArgs(args)){return;}
 
-         //uses IntellJ CLI arguments
-         BasicDataSource dataSource = getDataSource(args);
+         try{
+             //uses IntellJ CLI arguments
+             BasicDataSource dataSource = getDataSource(args);
 
+             //
+             DataManager dataManager = new DataManager(dataSource);
 
+             NorthWindTradersApp app = new NorthWindTradersApp(dataManager);
 
+             app.start();
 
-
+         }catch(Exception e){
+             System.out.println("There was a SQL exception: "+ e.getMessage());
+         }
 //        UserInterface ui = new UserInterface();
 //        ui.homeScreen();
     }

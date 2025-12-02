@@ -1,5 +1,6 @@
 package com.pluralsight.userinterface;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class InputCollector {
@@ -104,6 +105,25 @@ public class InputCollector {
         }while (!isDouble);
 
         return result;
+
+    }
+
+    public static void displayList(List<?> values){
+        int totalNumber = values.size();
+        int numberPerRow = 5;
+        int indexOfNext = 0;
+
+        while(indexOfNext < totalNumber ){
+
+            for(int i = 1 ; i <= numberPerRow ; i++){
+                if(indexOfNext >= totalNumber){
+                    System.out.println();
+                    return;
+                }
+                System.out.printf("%15s", values.get(indexOfNext++).toString());
+            }
+            System.out.println();
+        }
 
     }
 }

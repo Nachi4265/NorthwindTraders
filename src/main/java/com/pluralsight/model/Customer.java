@@ -38,7 +38,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.format("------------------------\n Contact Name: %-5s \n Company Name: %-40s \n City: %-5s \n Country: %-15s \n Phone Number: %-10s" , contactName , companyName ,city , country, phoneNumber);
+        return String.format("------------------------\n Contact Name: %-5s \n Company Name: %-40s \n City: %-5s \n Country: %-15s \n Phone Number: %-10s \n" , contactName , companyName ,city , country, phoneNumber);
     }
 
 }
